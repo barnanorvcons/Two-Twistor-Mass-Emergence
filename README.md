@@ -340,14 +340,43 @@ of the combined (t2, t2') system at the 30-degree eigenangle.
 
 ---
 
+## Zero-Energy Balance
+
+The Fano plane is the vacuum — not "nothing" (the framework has no
+concept of nothing or infinity), but the state of perfect balance.
+The cones are separations of this balance into +J and -J:
+
+- Cone A: +J (forward precession) = +250 GeV magnitude
+- Cone B: -J (backward precession) = -250 GeV magnitude
+- Net: +250 + (-250) = 0 (balance preserved)
+
+The universe is balance, rearranged into directions. The total energy
+is zero. Pair creation separates +n/-n from the time plane.
+Annihilation returns them. The Dirac negative energy sea is the
+time plane: finite (N ~ 10^7 states), discrete (half-integer steps).
+
+CPT invariance: m_app depends on n^2, not n. Same mass for particle
+and antiparticle. Computed, not postulated.
+
+N is derived from the framework (N*Delta = 2^8 - 2 = 254, with
+Delta = 4*alpha^2/9), not from measured masses. Zero external inputs.
+
 ## Testable Predictions
 
 1. Higgs self-coupling lambda = 0.1305 (SM predicts 0.129; distinguishable at FCC-hh)
-2. Graviton energy scale at ~1 GeV (not Planck scale)
+2. Graviton energy scale at ~1 GeV, 8 pieces (not Planck scale)
 3. Neutrino-dark matter scattering cross section ~1000x electron-DM
 4. CMB preferred axis from the twist geometry
 5. Normal neutrino mass ordering
 6. Dark matter fraction = cos(30 deg) = 86.6%
+7. Permanent entanglement via (t2, t2') eigenstate at 30-degree spin angle
+
+## Intellectual Foundations
+
+- **Cantor** — discrete vs continuous distinction (the Bockstein bridge)
+- **Erdos** — primes as structural skeleton (all coupling constants are prime)
+- **Penrose** — two-twistor construction (this work completes his program)
+- **Dirac** — negative energy sea (finite, discrete, in the time plane)
 
 ---
 
@@ -374,6 +403,11 @@ geometric invariants of structures that emerge uniquely from F2.
 The specific prime numbers appearing in the results (3, 7, 13, 59, 137)
 are not inputs. They are point counts, dimensions, and ratios of
 structures that are forced to exist by the axiom F2.
+
+The quantum number scale N is derived internally:
+N = (2^8 - 2) * 9 * 137^2 / 4 = 10,726,484 (from N*Delta = 254
+and Delta = 4*alpha^2/9). The measured lepton masses confirm this
+value (N = 10,858,000 from m_e, m_mu) to 98.8%. Zero external inputs.
 
 The match to observation is a test. The framework either produces the
 correct numbers or it does not. It does.

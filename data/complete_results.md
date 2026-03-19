@@ -179,4 +179,5 @@ Cosmological constant decomposition:
 - Average match: 99.5%
 - Problems resolved: 26
 - Free parameters: 0 (beyond F2 axiom)
-- Measured inputs used: 2 (m_e, m_mu for fixing N)
+- Measured inputs: 0 (N derived from N*Delta = 254, Delta = 4*alpha^2/9)
+- m_e, m_mu used as cross-check (confirm N to 98.8%), not as inputs
