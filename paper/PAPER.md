@@ -377,19 +377,27 @@ eigenangle. This state is topologically protected.
 
 ## 9. Zero-Energy Universe and the Antiparticle Mechanism
 
-### 9.1 The Fano Plane Has Zero Energy
+### 9.1 The Fano Plane Is the Balanced State
 
-The Fano plane is the vacuum. It has no energy. The cones that grow
-from it are NOT created from energy. They are SEPARATIONS of zero
-into +J and -J:
+The Fano plane is the vacuum — not "nothing" (the framework has no
+concept of nothing, just as it has no concept of infinity), but the
+state of perfect balance. The +J and -J directions are in equilibrium.
+
+The cones that grow from the Fano plane are SEPARATIONS of this
+balance into two opposite precession directions:
 
 - Cone A: +J (forward precession) = +250 GeV magnitude
 - Cone B: -J (backward precession) = -250 GeV magnitude
-- Total: +250 + (-250) = 0
+- Total: +250 + (-250) = 0 (balance preserved)
 
-The 500 GeV "total energy" is the MAGNITUDE of the fluctuation,
-not the net. The net is zero. Nothing was created. Zero was
-separated into two opposite somethings.
+The 500 GeV is the MAGNITUDE of the separation, not the net.
+The balance was never broken — it was rearranged. The +J and -J
+that were in equilibrium became spatially and temporally separated,
+but their sum remained zero.
+
+The universe is not "something from nothing." It is balance,
+rearranged. The concept of "nothing" does not exist in the
+framework — only directions, discreteness, and balance.
 
 ### 9.2 Within Each Cone: Also Zero
 
@@ -484,7 +492,8 @@ Within each cone:
 | Time plane | -(sum of emerged energies) |
 | **Total per cone** | **0** |
 
-The Fano plane gave birth to zero. The universe is zero, arranged.
+The Fano plane was balance. It remains balance. The universe is
+balance, rearranged into directions.
 
 ---
 
@@ -526,6 +535,33 @@ and the complete physics — all encoded in one line over F2.
 
 ---
 
+## Intellectual Foundations
+
+This work rests on insights from:
+
+- **Cantor** — the distinction between discrete and continuous is
+  fundamental, not merely technical. The Bockstein bridge
+  (0 -> Z -> Q -> Q/Z -> 0) is the algebraic embodiment of this
+  distinction. The framework is discrete (F2) at its foundation,
+  continuous (R) in its observables, with the bridge being a
+  theorem, not a choice.
+
+- **Erdos** — the primes are not sparse anomalies but the structural
+  skeleton of arithmetic. The coupling constants (137, 59, 13, 7, 3)
+  are ALL prime. This is not coincidence — the primes are the point
+  counts of projective geometries over F2, which are forced to be
+  prime by the structure of finite fields.
+
+- **Penrose** — the two-twistor construction defines spacetime points,
+  mass, and the Dirac equation from cohomological necessity. This
+  work completes his program by providing the physical realization
+  (cones from the Fano plane) and the algebraic bridge (Pin covers,
+  Compartment Algebra) that resolve the finite-field obstruction.
+
+- **Dirac** — the negative energy sea is not a metaphor. It is the
+  time plane, containing -n states (backward-precessing), finite
+  (N ~ 10^7 states), and discrete (half-integer steps).
+
 ## References
 
 1. Penrose, R. "Twistor algebra." J. Math. Phys. 8, 345 (1967).
@@ -537,6 +573,9 @@ and the complete physics — all encoded in one line over F2.
 7. Albrecht, A. and Magueijo, J. "A time varying speed of light." Phys. Rev. D 59, 043516 (1999).
 8. Ehrenfest, P. "Gleichformige Rotation starrer Korper und Relativitatstheorie." Phys. Z. 10, 918 (1909).
 9. Koide, Y. "New viewpoint in lepton mass spectrum." Phys. Rev. Lett. 47, 1241 (1981).
+10. Cantor, G. "Ueber eine Eigenschaft des Inbegriffes aller reellen algebraischen Zahlen." J. Reine Angew. Math. 77, 258 (1874).
+11. Erdos, P. and Kac, M. "The Gaussian law of errors in the theory of additive number theoretic functions." Am. J. Math. 62, 738 (1940).
+12. Dirac, P.A.M. "A theory of electrons and protons." Proc. R. Soc. A 126, 360 (1930).
 
 ---
 
