@@ -375,7 +375,120 @@ eigenangle. This state is topologically protected.
 
 ---
 
-## 9. Testable Predictions
+## 9. Zero-Energy Universe and the Antiparticle Mechanism
+
+### 9.1 The Fano Plane Has Zero Energy
+
+The Fano plane is the vacuum. It has no energy. The cones that grow
+from it are NOT created from energy. They are SEPARATIONS of zero
+into +J and -J:
+
+- Cone A: +J (forward precession) = +250 GeV magnitude
+- Cone B: -J (backward precession) = -250 GeV magnitude
+- Total: +250 + (-250) = 0
+
+The 500 GeV "total energy" is the MAGNITUDE of the fluctuation,
+not the net. The net is zero. Nothing was created. Zero was
+separated into two opposite somethings.
+
+### 9.2 Within Each Cone: Also Zero
+
+Each cone contains +n states (particles) and -n states (antiparticles):
+
+- +n (forward precession): energy +m_app
+- -n (backward precession): energy -m_app (in 5D accounting)
+- Time plane compensates: carries -(net emerged energy)
+- Total per cone: 0
+
+The 4D observer sees positive masses for both particles and
+antiparticles (because m_app depends on n^2, not n). The negative
+energy is hidden in the time plane.
+
+### 9.3 The Time Plane as Negative Energy Container
+
+The -n states are Dirac's "negative energy sea" — literally the
+backward-precessing states in the time plane. The time plane holds
+them until the pair creation threshold is reached.
+
+In Dirac's formulation (1930): the sea was infinite and problematic.
+In this framework: the sea is FINITE (n runs from -N to +N, with
+N ~ 10^7) and DISCRETE (half-integer steps). No infinities.
+
+### 9.4 Pair Creation
+
+Creating a particle-antiparticle pair does not create energy. It
+SEPARATES a +n/-n pair from their canceling state in the time plane:
+
+- Before: +n hidden (precessing forward), -n hidden (precessing backward)
+- Energy cost: 2 * m_app (to overcome the centrifugal barrier V_eff)
+- After: +n visible (particle), -n visible (antiparticle)
+- Net energy change: 0 (kinetic energy converts to separation energy)
+
+The threshold energy for pair creation of species with mass m_app:
+
+**E_threshold = 2 * m_app = 2 * m0 * sqrt(1 - n^2 * epsilon)**
+
+| Pair | Threshold | What it equals |
+|------|-----------|---------------|
+| e-e+ | 1.022 MeV | Smallest charged pair |
+| t-tbar | 346 GeV | Largest quark pair |
+| HH | 250 GeV | Exactly one cone energy |
+
+The Higgs pair threshold (250 GeV) equals EXACTLY the energy of one
+cone. Creating a Higgs pair is recreating the k-cone structure.
+
+### 9.5 Annihilation
+
+Annihilation is the reverse: +n and -n return to the time plane.
+Their separation energy is released as photons.
+
+- Before: particle (+n, mass m_app) + antiparticle (-n, mass m_app)
+- After: photons (energy 2*m_app) + time plane absorbs the states
+- Net: 0 = 0
+
+The 4D observer sees E = mc^2 (mass converts to photon energy).
+The 5D observer sees: separation energy is refunded. Nothing was
+created, nothing was destroyed. The pair returned to its canceling
+state in the time plane.
+
+### 9.6 Why Same Mass for Particle and Antiparticle
+
+m_app = m0 * sqrt(1 - n^2 * epsilon)
+
+This depends on n^2, not n. Whether n = +(N-1/2) or n = -(N-1/2):
+
+n^2 = (N-1/2)^2 in both cases.
+
+**Same mass. Exactly. From the formula. Not postulated — computed.**
+
+This is CPT invariance: the mass spectrum is symmetric under
+n -> -n because the mass formula is even in n.
+
+### 9.7 The Energy Budget Summary
+
+The total energy of the universe is zero. The 500 GeV is the
+magnitude of the separation:
+
+| Component | Energy | Net contribution |
+|-----------|--------|-----------------|
+| Cone A (+J) | +250 GeV magnitude | +250 |
+| Cone B (-J) | -250 GeV magnitude | -250 |
+| Total | 500 magnitude | **0 net** |
+
+Within each cone:
+
+| Component | Energy |
+|-----------|--------|
+| Particles (+n) | +m_app (visible) |
+| Antiparticles (-n) | +m_app (visible in 4D) |
+| Time plane | -(sum of emerged energies) |
+| **Total per cone** | **0** |
+
+The Fano plane gave birth to zero. The universe is zero, arranged.
+
+---
+
+## 10. Testable Predictions
 
 1. Higgs self-coupling lambda = 0.1305 (distinguishable from SM
    value 0.129 at future colliders)
@@ -389,7 +502,7 @@ eigenangle. This state is topologically protected.
 
 ---
 
-## 10. Conclusion
+## 11. Conclusion
 
 Starting from the axiom F2, the framework derives the complete
 particle spectrum of the Standard Model through a chain of forced
