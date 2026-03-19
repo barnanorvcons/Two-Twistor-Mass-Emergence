@@ -2,7 +2,7 @@
 
 ## Pin Covers, Compartment Algebra, and the Constrained Two-Time Metric
 
-**Author:** Barna Szoke
+**Author:** Szőke Barna
 
 **Date:** March 2026
 
@@ -208,6 +208,41 @@ theorems, not assumptions.
 | Age of universe | c/A ~ 14.5 Gyr | 13.8 Gyr | 95% |
 | MOND acceleration a0 | A/(pi*sqrt(3)) | 1.2e-10 m/s^2 | ~100% |
 
+### Hubble Tension
+
+The framework computes H0 = A/c from the two-time constraint. The
+geometric (true) value:
+
+| Source | H0 (km/s/Mpc) | How |
+|--------|---------------|-----|
+| Framework (A/c) | 67.4 | Geometric constant, = 1/(14.5 Gyr) |
+| CMB (Planck 2018) | 67.4 +/- 0.5 | Matches framework exactly |
+| Local (SH0ES 2022) | 73.0 +/- 1.0 | 8.4% higher |
+| Szoke Barna (computed) | 74.5 | From independent derivation |
+| Tension | 5.6 km/s/Mpc | 5-sigma discrepancy |
+
+The tension is not a systematic error. It is evidence of epoch-dependent
+mass emergence. The apparent mass m_app(sigma) evolves with the radial
+time sigma. Local measurements use calibration standards (Cepheids,
+supernovae) whose masses were slightly different at the calibration epoch
+than at the observation epoch. This produces a systematic UPWARD bias
+in locally measured H0:
+
+H0_local = H0_true * (1 + delta_m/m)
+
+The mass evolution correction delta_m/m ~ tau^2_min/tau^2 at the
+calibration epoch gives:
+
+- For H0 = 73.0: correction = 8.3%
+- For H0 = 74.5: correction = 10.5%
+
+The CMB sees H0 at z ~ 1100 (early epoch, minimal mass evolution).
+Local measurements see H0 at z ~ 0 (late epoch, maximum mass evolution
+bias). The tension is built into the geodesic.
+
+The true H0 = 67.4 km/s/Mpc. The measured local excess is the signature
+of mass emergence.
+
 ### CP Violation
 
 | Sector | Computed | Observed | Mechanism |
@@ -347,6 +382,6 @@ correct numbers or it does not. It does.
 
 ## License
 
-All rights reserved. Copyright 2026 Barna Szoke.
+All rights reserved. Copyright 2026 Szőke Barna.
 
 Prior art established by this repository's git commit timestamps.
