@@ -91,7 +91,7 @@ Lepton mass ratios:
 | 3 | m_c^2 - m_s^2 | 2*m0^2*145/N | 1,619,000 MeV^2 | 1,616,600 MeV^2 | 99.85% |
 | 4 | m_t^2 - m_b^2 | 2*sin^2(30)*m0^2 | 30,302 GeV^2 | 29,912 GeV^2 | 98.7% |
 | 5 | Cabibbo angle | sqrt(m_d/m_s) | 0.2224 | 0.2243 | 99.2% |
-| 6 | |V_cb| | sqrt(m_s/m_b)*(b2/b3)^0.5 | ~0.042 | 0.0422 | 99.5% |
+| 6 | |V_cb| | sqrt(m_s/m_b) * VO+(4,2) suppression | ~0.042 | 0.0422 | Pending full VO computation |
 
 Key quark structure:
 - Delta_n(charm-strange) = 137 + 8 = 145 (EM quantum + graviton count)
