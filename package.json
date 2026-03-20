@@ -1,0 +1,24 @@
+{
+  "name": "two-twistor-mass-emergence",
+  "version": "1.0.0",
+  "description": "**Author:** Szőke Barna",
+  "main": "create_readme_docx.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barnanorvcons/two-twistor-mass-emergence.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/barnanorvcons/two-twistor-mass-emergence/issues"
+  },
+  "homepage": "https://github.com/barnanorvcons/two-twistor-mass-emergence#readme",
+  "dependencies": {
+    "docx": "^9.6.1"
+  }
+}
