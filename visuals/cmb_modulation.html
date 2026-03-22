@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMB Polarization from Two-Twistor Geometry</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a1a;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 20px 50px;
+  }
+  h1 {
+    font-size: 28px;
+    color: #ffffff;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: #8888aa;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  canvas {
+    display: block;
+    margin: 0 auto 30px;
+    border: 1px solid #222244;
+    border-radius: 6px;
+  }
+  .predictions {
+    background: #111130;
+    border: 1px solid #333366;
+    border-radius: 8px;
+    padding: 20px 30px;
+    max-width: 900px;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .predictions h3 {
+    color: #aaaacc;
+    font-size: 16px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #333366;
+    padding-bottom: 8px;
+  }
+  .predictions ul {
+    list-style: none;
+    padding: 0;
+  }
+  .predictions li {
+    padding: 5px 0;
+    font-size: 14px;
+    color: #ccccdd;
+  }
+  .predictions li .num {
+    color: #66aaff;
+    font-weight: bold;
+    margin-right: 6px;
+  }
+</style>
+</head>
+<body>
+
+<h1>CMB Polarization from Two-Twistor Geometry</h1>
+<div class="subtitle">c<sub>1</sub>/c<sub>2</sub> modulation, E/B modes, r(&sigma;) &mdash; Szoke Barna, March 2026</div>
+
+<canvas id="graph1" width="900" height="400"></canvas>
+<canvas id="graph2" width="900" height="350"></canvas>
+<canvas id="graph3" width="900" height="350"></canvas>
+
+<div class="predictions">
+  <h3>Testable Predictions</h3>
+  <ul>
+    <li><span class="num">#42:</span> r = 1/169 testable by LiteBIRD</li>
+    <li><span class="num">#43:</span> r evolves with epoch</li>
+    <li><span class="num">#44:</span> Hemispherical asymmetry from Poinsot</li>
+    <li><span class="num">#40:</span> Quadrupole suppression ~83%</li>
+    <li><span class="num">#41:</span> B-mode amplitude = sin(30&deg;) torsion</li>
+  </ul>
+</div>
+
+<script>
+// ===================== UTILITY FUNCTIONS =====================
+function drawGraphTitle(ctx, w, title) {
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 16px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillText(title, w / 2, 24);
+}
+
+// Margins
+const ML = 80, MR = 30, MT = 45, MB = 50;
+
+// ===================== GRAPH 1: Tensor-to-Scalar Ratio =====================
+(function() {
+  var c = document.getElementById('graph1');
+  var ctx = c.getContext('2d');
+  var W = c.width, H = c.height;
+  var pw = W - ML - MR, ph = H - MT - MB;
+
+  // Background
+  ctx.fillStyle = '#0a0a1a';
+  ctx.fillRect(0, 0, W, H);
+  drawGraphTitle(ctx, W, 'Tensor-to-Scalar Ratio r(\u03C3)');
+
+  // Log ranges
+  var xMin = -3, xMax = 3; // log10(sigma/sigma0)
+  var yMin = Math.log10(0.001), yMax = Math.log10(0.2); // log10(r)
+
+  function toX(logVal) { return ML + (logVal - xMin) / (xMax - xMin) * pw; }
+  function toY(logVal) { return MT + (yMax - logVal) / (yMax - yMin) * ph; }
+
+  // Grid
+  ctx.strokeStyle = '#1a1a3a';
+  ctx.lineWidth = 0.5;
+  for (var i = xMin; i <= xMax; i++) {
+    var x = toX(i);
+    ctx.beginPath(); ctx.moveTo(x, MT); ctx.lineTo(x, MT + ph); ctx.stroke();
+  }
+  for (var v = yMin; v <= yMax + 0.01; v += 0.5) {
+    var y = toY(v);
+    ctx.beginPath(); ctx.moveTo(ML, y); ctx.lineTo(ML + pw, y); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#555577';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(ML, MT); ctx.lineTo(ML, MT + ph); ctx.lineTo(ML + pw, MT + ph); ctx.stroke();
+
+  // X tick labels
+  ctx.fillStyle = '#8888aa';
+  ctx.font = '12px Segoe UI';
+  ctx.textAlign = 'center';
+  for (var i = xMin; i <= xMax; i++) {
+    ctx.fillText('10^' + i, toX(i), MT + ph + 18);
+  }
+  ctx.fillText('\u03C3/\u03C3\u2080', W / 2, MT + ph + 38);
+
+  // Y tick labels
+  ctx.textAlign = 'right';
+  var yTicks = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2];
+  for (var i = 0; i < yTicks.length; i++) {
+    var ly = Math.log10(yTicks[i]);
+    if (ly >= yMin && ly <= yMax) {
+      ctx.fillText(yTicks[i].toString(), ML - 8, toY(ly) + 4);
+    }
+  }
+  ctx.save();
+  ctx.translate(18, MT + ph / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.fillText('r', 0, 0);
+  ctx.restore();
+
+  // r(sigma) curve: r = (1/169)*exp(pi - 2*arctan(sigma))
+  // sigma/sigma0 = 10^logx, so sigma = 10^logx
+  ctx.strokeStyle = '#4488ff';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  var first = true;
+  for (var px = 0; px <= pw; px++) {
+    var logx = xMin + px / pw * (xMax - xMin);
+    var sigma = Math.pow(10, logx);
+    var r = (1 / 169) * Math.exp(Math.PI - 2 * Math.atan(sigma));
+    var logr = Math.log10(r);
+    if (logr < yMin - 0.5 || logr > yMax + 0.5) { first = true; continue; }
+    var x = ML + px;
+    var y = toY(logr);
+    if (first) { ctx.moveTo(x, y); first = false; }
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Horizontal lines
+  function hLine(rVal, color, label, labelSide) {
+    var logr = Math.log10(rVal);
+    if (logr < yMin || logr > yMax) return;
+    var y = toY(logr);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([8, 5]);
+    ctx.beginPath(); ctx.moveTo(ML, y); ctx.lineTo(ML + pw, y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = color;
+    ctx.font = '11px Segoe UI';
+    ctx.textAlign = labelSide === 'left' ? 'left' : 'right';
+    var lx = labelSide === 'left' ? ML + 8 : ML + pw - 8;
+    ctx.fillText(label, lx, y - 5);
+  }
+
+  hLine(0.036, '#ff4444', 'BICEP/Keck r = 0.036', 'right');
+  hLine(0.001, '#44cc44', 'LiteBIRD r = 0.001', 'right');
+  hLine(1 / 169, '#ff8800', 'Asymptotic r = 1/169 \u2248 0.00592', 'left');
+
+  // Dot markers
+  function dotMarker(sigmaVal, label) {
+    var logx = Math.log10(sigmaVal);
+    var r = (1 / 169) * Math.exp(Math.PI - 2 * Math.atan(sigmaVal));
+    var logr = Math.log10(r);
+    var x = toX(logx), y = toY(logr);
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(x, y, 5, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillStyle = '#ccccee';
+    ctx.font = '11px Segoe UI';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x, y - 12);
+    ctx.fillStyle = '#888899';
+    ctx.fillText('r=' + r.toFixed(4), x, y + 16);
+  }
+
+  dotMarker(0.01, '\u03C3=0.01 (CMB)');
+  dotMarker(1, '\u03C3=1 (\u03C3\u2080)');
+  dotMarker(100, '\u03C3=100 (now)');
+})();
+
+// ===================== GRAPH 2: E-mode and B-mode =====================
+(function() {
+  var c = document.getElementById('graph2');
+  var ctx = c.getContext('2d');
+  var W = c.width, H = c.height;
+  var pw = W - ML - MR, ph = H - MT - MB;
+
+  ctx.fillStyle = '#0a0a1a';
+  ctx.fillRect(0, 0, W, H);
+  drawGraphTitle(ctx, W, 'E-mode and B-mode Waveforms');
+
+  var xMin = 0, xMax = 2 * Math.PI;
+  var yMin = -1.2, yMax = 1.2;
+
+  function toX(v) { return ML + (v - xMin) / (xMax - xMin) * pw; }
+  function toY(v) { return MT + (yMax - v) / (yMax - yMin) * ph; }
+
+  // Grid
+  ctx.strokeStyle = '#1a1a3a';
+  ctx.lineWidth = 0.5;
+  var xTicks = [0, Math.PI / 2, Math.PI, 3 * Math.PI / 2, 2 * Math.PI];
+  var xLabels = ['0', '\u03C0/2', '\u03C0', '3\u03C0/2', '2\u03C0'];
+  for (var i = 0; i < xTicks.length; i++) {
+    var x = toX(xTicks[i]);
+    ctx.beginPath(); ctx.moveTo(x, MT); ctx.lineTo(x, MT + ph); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#555577';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(ML, MT); ctx.lineTo(ML, MT + ph); ctx.lineTo(ML + pw, MT + ph); ctx.stroke();
+
+  // Zero line
+  ctx.strokeStyle = '#333355';
+  ctx.lineWidth = 1;
+  var y0 = toY(0);
+  ctx.beginPath(); ctx.moveTo(ML, y0); ctx.lineTo(ML + pw, y0); ctx.stroke();
+
+  // X labels
+  ctx.fillStyle = '#8888aa';
+  ctx.font = '12px Segoe UI';
+  ctx.textAlign = 'center';
+  for (var i = 0; i < xTicks.length; i++) {
+    ctx.fillText(xLabels[i], toX(xTicks[i]), MT + ph + 18);
+  }
+  ctx.fillText('\u03C6', W / 2, MT + ph + 38);
+
+  // Y labels
+  ctx.textAlign = 'right';
+  for (var v = -1; v <= 1; v += 0.5) {
+    ctx.fillText(v.toFixed(1), ML - 8, toY(v) + 4);
+  }
+
+  // Shaded regions
+  // CANCELLATION: 0 to pi/2
+  ctx.fillStyle = 'rgba(255, 100, 100, 0.08)';
+  ctx.fillRect(toX(0), MT, toX(Math.PI / 2) - toX(0), ph);
+  // MODULATION: pi/2 to 2pi
+  ctx.fillStyle = 'rgba(100, 150, 255, 0.05)';
+  ctx.fillRect(toX(Math.PI / 2), MT, toX(2 * Math.PI) - toX(Math.PI / 2), ph);
+
+  // Region labels
+  ctx.font = '12px Segoe UI';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(255, 120, 120, 0.6)';
+  ctx.fillText('CANCELLATION', (toX(0) + toX(Math.PI / 2)) / 2, MT + 18);
+  ctx.fillStyle = 'rgba(120, 160, 255, 0.6)';
+  ctx.fillText('MODULATION', (toX(Math.PI / 2) + toX(2 * Math.PI)) / 2, MT + 18);
+
+  var deg30 = 30 * Math.PI / 180;
+
+  // E-mode: sin(phi) * (1 - (1-cos(30deg)) * sin(2/13*phi)^2)
+  ctx.strokeStyle = '#4488ff';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (var px = 0; px <= pw; px++) {
+    var phi = xMin + px / pw * (xMax - xMin);
+    var s = Math.sin(2 / 13 * phi);
+    var E = Math.sin(phi) * (1 - (1 - Math.cos(deg30)) * s * s);
+    var x = ML + px, y = toY(E);
+    if (px === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // B-mode: cos(phi) * 0.5 * sin(2/13*phi)
+  ctx.strokeStyle = '#ff4444';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (var px = 0; px <= pw; px++) {
+    var phi = xMin + px / pw * (xMax - xMin);
+    var B = Math.cos(phi) * 0.5 * Math.sin(2 / 13 * phi);
+    var x = ML + px, y = toY(B);
+    if (px === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Legend
+  var lx = ML + pw - 140, ly = MT + 14;
+  ctx.fillStyle = '#111130';
+  ctx.fillRect(lx - 6, ly - 12, 130, 40);
+  ctx.strokeStyle = '#333366';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(lx - 6, ly - 12, 130, 40);
+
+  ctx.strokeStyle = '#4488ff'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 25, ly); ctx.stroke();
+  ctx.fillStyle = '#4488ff'; ctx.font = '12px Segoe UI'; ctx.textAlign = 'left';
+  ctx.fillText('E-mode', lx + 30, ly + 4);
+
+  ctx.strokeStyle = '#ff4444'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(lx, ly + 18); ctx.lineTo(lx + 25, ly + 18); ctx.stroke();
+  ctx.fillStyle = '#ff4444';
+  ctx.fillText('B-mode', lx + 30, ly + 22);
+})();
+
+// ===================== GRAPH 3: Light Speed Anisotropy =====================
+(function() {
+  var c = document.getElementById('graph3');
+  var ctx = c.getContext('2d');
+  var W = c.width, H = c.height;
+  var pw = W - ML - MR, ph = H - MT - MB;
+
+  ctx.fillStyle = '#0a0a1a';
+  ctx.fillRect(0, 0, W, H);
+  drawGraphTitle(ctx, W, 'Light Speed Anisotropy c\u2081/c\u2082');
+
+  var xMin = 0, xMax = 15;
+  var yMin = 0, yMax = 5.5;
+
+  function toX(v) { return ML + (v - xMin) / (xMax - xMin) * pw; }
+  function toY(v) { return MT + (yMax - v) / (yMax - yMin) * ph; }
+
+  // Grid
+  ctx.strokeStyle = '#1a1a3a';
+  ctx.lineWidth = 0.5;
+  for (var i = 0; i <= 15; i += 3) {
+    var x = toX(i);
+    ctx.beginPath(); ctx.moveTo(x, MT); ctx.lineTo(x, MT + ph); ctx.stroke();
+  }
+  for (var v = 0; v <= yMax; v += 1) {
+    var y = toY(v);
+    ctx.beginPath(); ctx.moveTo(ML, y); ctx.lineTo(ML + pw, y); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#555577';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(ML, MT); ctx.lineTo(ML, MT + ph); ctx.lineTo(ML + pw, MT + ph); ctx.stroke();
+
+  // X labels
+  ctx.fillStyle = '#8888aa';
+  ctx.font = '12px Segoe UI';
+  ctx.textAlign = 'center';
+  for (var i = 0; i <= 15; i += 3) {
+    ctx.fillText(i.toString(), toX(i), MT + ph + 18);
+  }
+  ctx.fillText('\u03C3', W / 2, MT + ph + 38);
+
+  // Y labels
+  ctx.textAlign = 'right';
+  for (var v = 0; v <= 5; v += 1) {
+    ctx.fillText(v.toFixed(0), ML - 8, toY(v) + 4);
+  }
+
+  // c1/c2 = exp(-arctan(sigma))
+  ctx.strokeStyle = '#4488ff';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (var px = 0; px <= pw; px++) {
+    var sigma = xMin + px / pw * (xMax - xMin);
+    var val = Math.exp(-Math.atan(sigma));
+    var x = ML + px, y = toY(val);
+    if (px === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // c2/c1 = exp(arctan(sigma))
+  ctx.strokeStyle = '#ff8800';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  for (var px = 0; px <= pw; px++) {
+    var sigma = xMin + px / pw * (xMax - xMin);
+    var val = Math.exp(Math.atan(sigma));
+    var x = ML + px, y = toY(val);
+    if (px === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // y=1 line: c1*c2 = c^2
+  ctx.strokeStyle = '#44cc44';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([8, 5]);
+  var y1 = toY(1);
+  ctx.beginPath(); ctx.moveTo(ML, y1); ctx.lineTo(ML + pw, y1); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#44cc44';
+  ctx.font = '11px Segoe UI';
+  ctx.textAlign = 'left';
+  ctx.fillText('c\u2081\u00B7c\u2082 = c\u00B2 (invariant)', ML + pw - 180, y1 - 6);
+
+  // Blue asymptote: exp(-pi/2) ~ 0.208
+  var asym1 = Math.exp(-Math.PI / 2);
+  ctx.strokeStyle = '#4488ff';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  var ya1 = toY(asym1);
+  ctx.beginPath(); ctx.moveTo(ML, ya1); ctx.lineTo(ML + pw, ya1); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#4488ff';
+  ctx.font = '11px Segoe UI';
+  ctx.textAlign = 'left';
+  ctx.fillText('e^(-\u03C0/2) \u2248 0.208', ML + 8, ya1 + 14);
+
+  // Orange asymptote: exp(pi/2) ~ 4.81
+  var asym2 = Math.exp(Math.PI / 2);
+  ctx.strokeStyle = '#ff8800';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  var ya2 = toY(asym2);
+  ctx.beginPath(); ctx.moveTo(ML, ya2); ctx.lineTo(ML + pw, ya2); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#ff8800';
+  ctx.textAlign = 'right';
+  ctx.fillText('e^(\u03C0/2) \u2248 4.81', ML + pw - 8, ya2 - 6);
+
+  // Curve labels
+  ctx.font = '12px Segoe UI';
+  ctx.fillStyle = '#4488ff';
+  ctx.textAlign = 'left';
+  ctx.fillText('c\u2081/c\u2082 = e^(-arctan \u03C3)', toX(5) + 5, toY(Math.exp(-Math.atan(5))) - 10);
+
+  ctx.fillStyle = '#ff8800';
+  ctx.fillText('c\u2082/c\u2081 = e^(arctan \u03C3)', toX(5) + 5, toY(Math.exp(Math.atan(5))) - 10);
+})();
+</script>
+
+</body>
+</html>
