@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html><head><meta charset='UTF-8'><title>Bundle</title>
+<style>*{margin:0;padding:0}body{background:#0a0a1a;overflow:hidden;color:#e0e0e0;font-family:Segoe UI}canvas{display:block}#info{position:fixed;top:10px;left:10px;font-size:11px;background:rgba(0,0,0,0.8);padding:10px;border-radius:5px;max-width:320px;line-height:1.5}#info h3{color:#6cb4ee}#ct{position:fixed;bottom:10px;left:10px;font-size:11px;background:rgba(0,0,0,0.8);padding:8px;border-radius:5px}label{display:block;margin:2px 0;cursor:pointer}</style></head><body>
+<canvas id='cv'></canvas>
+<div id='info'><h3>Shrikhande + VO+(4,2) Bundle</h3>Blue: Shrikhande srg(16,6,2,2) 48 edges [PROVEN]<br>Red: VO+(4,2) srg(16,9,4,6) 72 edges [PROVEN]<br>Complement: S+V=K16 [PROVEN]<br>Eigs S: 6(x1),2(x6),-2(x9) [PROVEN]<br>Eigs V: 9(x1),1(x9),-3(x6) [PROVEN]<br>ST(S)=2^35, ST(V)=2^35*3^6 [PROVEN]<br>tau(L(4,1))=4 [PROVEN]<br>2^35/4^16=8 [PROVEN]<br><span style='color:#ff6666'>CIRCULAR LAYOUT (torus pos NOT proven)</span></div>
+<div id='ct'>Drag:rotate Scroll:zoom<br><label><input type='checkbox' id='showS' checked> Shrikhande (blue)</label><label><input type='checkbox' id='showV' checked> VO+ (red)</label><label><input type='checkbox' id='showG' checked> Graviton cliques (yellow)</label><label><input type='checkbox' id='showL'> Labels</label><label><input type='checkbox' id='auto' checked> Auto-rotate</label></div>
+<script>
+var eo=[[0, 1], [0, 3], [0, 5], [0, 7], [1, 2], [1, 4], [1, 6], [2, 3], [2, 5], [2, 7], [3, 4], [3, 6], [4, 5], [4, 7], [5, 6], [6, 7]];
+var S=[[0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0], [1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0], [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1], [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0], [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0], [1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1], [0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0], [0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0], [0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1], [0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0], [0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1], [0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0], [0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1], [0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1], [0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0]];
+var V=[[0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1], [0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1], [0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0], [0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1], [0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1], [0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0], [1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1], [1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1], [1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0], [1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1], [1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0], [1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1], [1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0], [1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0], [1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0]];
+var cl=[[0, 1, 2, 3], [0, 4, 5, 6], [4, 7, 8, 9], [1, 7, 10, 11], [5, 10, 12, 13], [2, 8, 12, 14], [6, 11, 14, 15], [3, 9, 13, 15]];
+var cv=document.getElementById("cv"),ctx=cv.getContext("2d"),W,H;
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}resize();onresize=resize;
+var rX=-0.4,rY=0,zm=2.2,drg=false,mx,my,PI=Math.PI;
+cv.onmousedown=function(e){drg=true;mx=e.clientX;my=e.clientY};
+cv.onmouseup=function(){drg=false};
+cv.onmousemove=function(e){if(drg){rY+=(e.clientX-mx)*0.01;rX+=(e.clientY-my)*0.01;mx=e.clientX;my=e.clientY}};
+cv.onwheel=function(e){zm*=e.deltaY>0?0.92:1.08;e.preventDefault()};
+var pos3d=[];
+for(var i=0;i<16;i++){var ring=i<8?0:1;var idx=i<8?i:i-8;var a=2*PI*idx/8;var r=150;var y=(ring-0.5)*120;pos3d.push([r*Math.cos(a),y,r*Math.sin(a)])}
+function rxf(p,a){var c=Math.cos(a),s=Math.sin(a);return[p[0],p[1]*c-p[2]*s,p[1]*s+p[2]*c]}
+function ryf(p,a){var c=Math.cos(a),s=Math.sin(a);return[p[0]*c+p[2]*s,p[1],-p[0]*s+p[2]*c]}
+function proj(p){var s=zm*250/(p[2]+500);return[W/2+p[0]*s,H/2+p[1]*s,p[2],s]}
+function draw(){
+ctx.clearRect(0,0,W,H);
+var t=Date.now()*0.0004;
+if(document.getElementById("auto").checked&&!drg)rY=t;
+var p3=[],p2=[];
+for(var i=0;i<16;i++){var p=rxf(pos3d[i],rX);p=ryf(p,rY);p3.push(p);p2.push(proj(p))}
+var edges=[];
+if(document.getElementById("showS").checked){for(var i=0;i<16;i++)for(var j=i+1;j<16;j++){if(S[i][j]){var z=(p3[i][2]+p3[j][2])/2;edges.push([i,j,z,"rgba(80,140,255,0.35)",1.5])}}}
+if(document.getElementById("showV").checked){for(var i=0;i<16;i++)for(var j=i+1;j<16;j++){if(V[i][j]){var z=(p3[i][2]+p3[j][2])/2;edges.push([i,j,z,"rgba(255,80,80,0.15)",0.8])}}}
+if(document.getElementById("showG").checked){for(var k=0;k<8;k++){var c=cl[k];for(var a=0;a<c.length;a++)for(var b=a+1;b<c.length;b++){var z=(p3[c[a]][2]+p3[c[b]][2])/2;edges.push([c[a],c[b],z,k%2==0?"rgba(255,220,50,0.4)":"rgba(255,180,50,0.3)",2.5])}}}
+edges.sort(function(a,b){return a[2]-b[2]});
+for(var e of edges){ctx.strokeStyle=e[3];ctx.lineWidth=e[4];ctx.beginPath();ctx.moveTo(p2[e[0]][0],p2[e[0]][1]);ctx.lineTo(p2[e[1]][0],p2[e[1]][1]);ctx.stroke()}
+var vi=[];for(var i=0;i<16;i++)vi.push([i,p3[i][2]]);vi.sort(function(a,b){return a[1]-b[1]});
+for(var v of vi){var i=v[0],x=p2[i][0],y=p2[i][1],s=p2[i][3],sz=Math.max(4,8*s/zm);
+ctx.beginPath();ctx.arc(x,y,sz,0,2*PI);var gr=ctx.createRadialGradient(x,y,0,x,y,sz);gr.addColorStop(0,"#66ff66");gr.addColorStop(1,"#226622");ctx.fillStyle=gr;ctx.fill();ctx.strokeStyle="#fff";ctx.lineWidth=0.5;ctx.stroke();
+var gs=[];for(var k=0;k<8;k++)if(cl[k].indexOf(i)>=0)gs.push(k);
+if(gs.length>=2){ctx.beginPath();ctx.arc(x-sz*0.4,y-sz*0.4,sz*0.2,0,2*PI);ctx.fillStyle=gs[0]%2==0?"#4488ff":"#ff4444";ctx.fill();ctx.beginPath();ctx.arc(x+sz*0.4,y-sz*0.4,sz*0.2,0,2*PI);ctx.fillStyle=gs[1]%2==0?"#4488ff":"#ff4444";ctx.fill()}
+if(document.getElementById("showL").checked&&sz>4){ctx.fillStyle="#fff";ctx.font=Math.max(7,sz*0.6)+"px Segoe UI";ctx.textAlign="center";ctx.fillText(eo[i][0]+","+eo[i][1],x,y+sz+10)}}
+ctx.fillStyle="#6cb4ee";ctx.font="14px Segoe UI";ctx.textAlign="center";
+ctx.fillText("Shrikhande (blue) + VO+(4,2) (red) = K16 complement pair on 16 points",W/2,H-45);
+ctx.fillStyle="#888";ctx.font="11px Segoe UI";
+ctx.fillText("S: srg(16,6,2,2) eigs 6,2,-2 | V: srg(16,9,4,6) eigs 9,1,-3 | ST=2^35 | tau=4",W/2,H-28);
+ctx.fillStyle="#ff6666";ctx.font="10px Segoe UI";
+ctx.fillText("CIRCULAR LAYOUT (torus embedding not yet proven)",W/2,H-12);
+requestAnimationFrame(draw)}draw();
+</script></body></html>

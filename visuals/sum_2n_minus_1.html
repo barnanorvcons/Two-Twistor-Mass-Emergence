@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Sum(2^n - 1)</title>
+<style>*{margin:0;padding:0}body{background:#0a0a1a;overflow:hidden}canvas{display:block}</style>
+</head><body><canvas id="cv"></canvas>
+<script>
+var cv=document.getElementById("cv"),ctx=cv.getContext("2d"),W,H;
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}resize();onresize=resize;
+var padL=80,padB=50,padT=30,padR=20;
+var maxN=20;
+// S(N) = sum_{n=0}^{N} (2^n - 1) = 2^{N+1} - N - 2
+function S(N){return Math.pow(2,N+1)-N-2}
+var maxS=S(maxN);
+function sx(n){return padL+n/maxN*(W-padL-padR)}
+function sy(v){return padT+(H-padT-padB)*(1-v/maxS)}
+// Grid
+ctx.strokeStyle="rgba(255,255,255,0.1)";ctx.lineWidth=0.5;
+for(var n=0;n<=maxN;n++){ctx.beginPath();ctx.moveTo(sx(n),padT);ctx.lineTo(sx(n),H-padB);ctx.stroke()}
+// Zero line
+ctx.strokeStyle="rgba(255,50,50,0.3)";ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(padL,sy(0));ctx.lineTo(W-padR,sy(0));ctx.stroke();
+// The curve S(N) = 2^{N+1} - N - 2
+ctx.strokeStyle="#4488ff";ctx.lineWidth=3;ctx.beginPath();
+for(var n=0;n<=maxN;n++){
+  var v=S(n);
+  if(n==0)ctx.moveTo(sx(n),sy(v));else ctx.lineTo(sx(n),sy(v));
+}
+ctx.stroke();
+// Points
+for(var n=0;n<=maxN;n++){
+  var v=S(n);
+  ctx.beginPath();ctx.arc(sx(n),sy(v),5,0,2*Math.PI);ctx.fillStyle="#44ff44";ctx.fill();
+  ctx.fillStyle="#fff";ctx.font="10px Segoe UI";ctx.textAlign="center";
+  if(n<=12)ctx.fillText(Math.round(v),sx(n),sy(v)-10);
+}
+// 2^{N+1} envelope for comparison
+ctx.strokeStyle="rgba(255,100,100,0.4)";ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.beginPath();
+for(var n=0;n<=maxN;n++){
+  var v=Math.pow(2,n+1);
+  if(n==0)ctx.moveTo(sx(n),sy(v));else ctx.lineTo(sx(n),sy(v));
+}
+ctx.stroke();ctx.setLineDash([]);
+// X axis labels
+ctx.fillStyle="#888";ctx.font="12px Segoe UI";ctx.textAlign="center";
+for(var n=0;n<=maxN;n++){ctx.fillText(n,sx(n),H-padB+20)}
+// Title
+ctx.fillStyle="#6cb4ee";ctx.font="16px Segoe UI";ctx.textAlign="center";
+ctx.fillText("S(N) = sum(2^n - 1) = 2^{N+1} - N - 2",W/2,20);
+ctx.fillStyle="#888";ctx.font="11px Segoe UI";
+ctx.fillText("Blue=S(N), Red dashed=2^{N+1} (pure exponential), Green dots=values",W/2,H-10);
+ctx.fillText("N",W/2,H-padB+35);
+</script></body></html>

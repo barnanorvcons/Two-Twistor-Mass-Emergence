@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Frobenius Eigenvalue Sum</title>
+<style>*{margin:0;padding:0}body{background:#0a0a1a;overflow:hidden}canvas{display:block}
+#info{position:fixed;top:10px;left:10px;font-size:12px;color:#e0e0e0;background:rgba(0,0,0,0.7);padding:10px;border-radius:5px;font-family:Segoe UI}
+</style></head><body>
+<canvas id="cv"></canvas>
+<div id="info">S(N) = sum of 2^n for n=0,1,2,2,3,4,...,N (repeating pattern)<br>Blue: S(N) cumulative sum<br>Red: 2^N exponential envelope<br>Green: N+1 linear (discretization cost)<br>Yellow dots: the 6 base quanta (1,2,4,4,8,16)</div>
+<script>
+var cv=document.getElementById("cv"),ctx=cv.getContext("2d"),W,H;
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}resize();onresize=resize;
+
+// The pattern repeats: n = 0,1,2,2,3,4, 5,6,7,7,8,9, 10,11,12,12,13,14, ...
+// Each cycle of 6 terms: base + 0,1,2,2,3,4
+function nValue(i){
+  var cycle=Math.floor(i/6);
+  var pos=i%6;
+  var offsets=[0,1,2,2,3,4];
+  return cycle*5+offsets[pos];
+}
+
+// Compute cumulative sums
+var maxI=120;
+var S=[];
+var cumSum=0;
+for(var i=0;i<=maxI;i++){
+  var n=nValue(i);
+  cumSum+=Math.pow(2,n);
+  S.push({i:i,n:n,val:Math.pow(2,n),cum:cumSum});
+}
+
+// Use log scale for y axis
+var padL=60,padB=40,padT=30,padR=20;
+var pw=W-padL-padR,ph=H-padT-padB;
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  var maxY=Math.log10(S[maxI].cum)*1.1;
+  var minY=0;
+
+  function sx(i){return padL+i/maxI*pw}
+  function sy(v){return padT+ph-(Math.log10(Math.max(v,1))/maxY)*ph}
+
+  // Grid
+  ctx.strokeStyle="rgba(255,255,255,0.08)";ctx.lineWidth=0.5;
+  for(var i=0;i<=maxI;i+=6){ctx.beginPath();ctx.moveTo(sx(i),padT);ctx.lineTo(sx(i),padT+ph);ctx.stroke()}
+  for(var p=0;p<=40;p+=5){ctx.beginPath();ctx.moveTo(padL,sy(Math.pow(10,p)));ctx.lineTo(padL+pw,sy(Math.pow(10,p)));ctx.stroke()}
+
+  // Exponential envelope 2^(nValue(i))
+  ctx.strokeStyle="rgba(255,68,68,0.4)";ctx.lineWidth=1;ctx.beginPath();
+  for(var i=0;i<=maxI;i++){
+    var v=Math.pow(2,nValue(i));
+    if(i==0)ctx.moveTo(sx(i),sy(v));else ctx.lineTo(sx(i),sy(v));
+  }
+  ctx.stroke();
+
+  // Linear cost N+1
+  ctx.strokeStyle="rgba(68,255,68,0.4)";ctx.lineWidth=1;ctx.beginPath();
+  for(var i=0;i<=maxI;i++){
+    if(i==0)ctx.moveTo(sx(i),sy(i+1));else ctx.lineTo(sx(i),sy(i+1));
+  }
+  ctx.stroke();
+
+  // Cumulative sum S(N) - the main curve
+  ctx.strokeStyle="#4488ff";ctx.lineWidth=2.5;ctx.beginPath();
+  for(var i=0;i<=maxI;i++){
+    if(i==0)ctx.moveTo(sx(i),sy(S[i].cum));else ctx.lineTo(sx(i),sy(S[i].cum));
+  }
+  ctx.stroke();
+
+  // Mark the first 6 base quanta
+  for(var i=0;i<6;i++){
+    ctx.beginPath();ctx.arc(sx(i),sy(S[i].cum),6,0,2*Math.PI);
+    ctx.fillStyle="#f0a030";ctx.fill();
+    ctx.fillStyle="#fff";ctx.font="10px Segoe UI";ctx.textAlign="center";
+    ctx.fillText("2^"+S[i].n+"="+S[i].val,sx(i),sy(S[i].cum)-10);
+  }
+
+  // Mark cycle boundaries
+  for(var c=0;c<=maxI/6;c++){
+    var i=c*6;
+    if(i>maxI)break;
+    ctx.strokeStyle="rgba(240,160,48,0.2)";ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(sx(i),padT);ctx.lineTo(sx(i),padT+ph);ctx.stroke();
+  }
+
+  // S(5) = 35 marker
+  ctx.beginPath();ctx.arc(sx(5),sy(S[5].cum),8,0,2*Math.PI);
+  ctx.fillStyle="#ff4444";ctx.fill();
+  ctx.fillStyle="#fff";ctx.font="12px Segoe UI";
+  ctx.fillText("S(5)=35=N1",sx(5)+15,sy(S[5].cum));
+
+  // Labels
+  ctx.fillStyle="#6cb4ee";ctx.font="14px Segoe UI";ctx.textAlign="center";
+  ctx.fillText("S(N) = cumulative sum of 2^n, pattern (0,1,2,2,3,4,...)",W/2,H-10);
+  ctx.fillStyle="#888";ctx.font="11px Segoe UI";
+  ctx.fillText("Blue=S(N), Red=2^n envelope, Green=linear cost, Yellow=base quanta",W/2,H-25);
+
+  // Y axis labels
+  ctx.fillStyle="#888";ctx.font="10px Segoe UI";ctx.textAlign="right";
+  for(var p=0;p<=35;p+=5){
+    ctx.fillText("10^"+p,padL-5,sy(Math.pow(10,p))+4);
+  }
+
+  // X axis labels
+  ctx.textAlign="center";
+  for(var i=0;i<=maxI;i+=6){
+    ctx.fillText(i,sx(i),padT+ph+15);
+  }
+}
+draw();
+</script></body></html>
