@@ -1,0 +1,62 @@
+================================================================
+TOOLKIT: CONE AND PRECESSION ANGLE DEFINITIONS
+Szoke Barna convention -- FINAL, do not change
+================================================================
+
+                    VERTICAL (gravity / null cone axis)
+                        |
+                        |  <- theta_prec (precession angle)
+                        |   /    = angle of CONE AXIS from vertical
+                        |  /     = 90 - alpha
+                        | /
+                        |/ <- CONE AXIS (tilted)
+                       /|
+                      / |
+                     /  |
+                    /   |
+          alpha -> / |  |  alpha = CONE HALF-ANGLE
+                  /  |  |        = angle from CONE AXIS to SURFACE
+                 /   |  |        = the opening angle
+                /    |  |
+               /     |  |
+              /______v__|_________ HORIZONTAL
+                   h        r
+                (height)  (radius)
+
+    r = h * tan(alpha)
+    h grows as alpha decreases (V = const)
+
+================================================================
+DEFINITIONS:
+================================================================
+
+  alpha = CONE HALF-ANGLE (from axis to surface)
+    90: flat disk    63.43: ideal    60: physical
+    45: contact      30: equilateral
+
+  theta_prec = 90 - alpha (PRECESSION ANGLE from vertical)
+    0: no prec    26.57: ideal    30: physical
+    45: mirror    60: equilateral
+
+  phi = azimuthal = precession phase = ln(t1/t2)
+
+================================================================
+MAPPING TABLE:
+================================================================
+
+  alpha   theta_p  I1/I3   h/r     Name
+  ------  -------  ------  ------  ----------------
+  90.00    0.00    0.50    0.00    Start (flat)
+  63.43   26.57    1.00    0.50    Ideal spherical
+  60.00   30.00    7/6     0.577   BE physical
+  45.00   45.00    5/2     1.000   Contact MIRROR
+  30.00   60.00    13/2    1.732   Equilateral
+  26.57   63.43    ---     2.000   Complement
+
+================================================================
+KEY:
+  alpha + theta_prec = 90 ALWAYS
+  alpha=30 means theta=60 (tall narrow cone)
+  alpha=60 means theta=30 (wide short cone)
+  delta = 3.43 = arctan(2) - 60 (symmetric around 45)
+================================================================

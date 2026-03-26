@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>T Torsion BL Group</title>
+<style>*{margin:0;padding:0}body{background:#0a0a1a;overflow-y:auto;color:#e0e0e0;font-family:Segoe UI,sans-serif}
+canvas{display:block;margin:20px auto}h1{color:#6cb4ee;text-align:center;padding:20px;font-size:22px}
+.info{background:#111;border-left:3px solid #6cb4ee;padding:10px;margin:10px 40px;font-size:12px;line-height:1.6}
+</style></head><body>
+<h1>T = BL(R, Z2xZ2) = Z4 x (Z4 x_Z2 Z4) — 32 Elements</h1>
+<canvas id="cv" width="1000" height="800"></canvas>
+<div class="info">
+<b>Colors:</b> White=identity, Green=light involution(4), Red=heavy involution(3), Blue=generator order 4(24)<br>
+<b>Edges:</b> Element doubles to its heavy involution (generator -> heavy)<br>
+<b>7 involutions = Fano plane.</b> 3 heavy (red) = 3 surjections = 3 Pin covers. 4 light (green) = 4 sectors.<br>
+<b>12 inverse pairs</b> of generators, 4 per heavy involution. 51 subgroups. Self-dual. Exponent 4.</div>
+<script>
+var cv=document.getElementById("cv"),ctx=cv.getContext("2d"),W=1000,H=800;
+var BL=[];
+for(var a=0;a<4;a++)for(var b=0;b<4;b++)for(var d=0;d<4;d++)if((d*d)%4==(b*b)%4)BL.push([a,b,d]);
+function ord(e){for(var k=1;k<33;k++)if((k*e[0])%4==0&&(k*e[1])%4==0&&(k*e[2])%4==0)return k;return 0}
+function dbl(e){return[(2*e[0])%4,(2*e[1])%4,(2*e[2])%4]}
+function idx(e){for(var i=0;i<32;i++)if(BL[i][0]==e[0]&&BL[i][1]==e[1]&&BL[i][2]==e[2])return i;return-1}
+var pos=[];
+var id_idx=idx([0,0,0]);
+var inv_idx=[];var gen_idx=[];
+for(var i=0;i<32;i++){if(ord(BL[i])==1)continue;if(ord(BL[i])==2)inv_idx.push(i);else gen_idx.push(i)}
+pos[id_idx]=[W/2,H/2];
+var R1=120;
+for(var i=0;i<inv_idx.length;i++){var a=-Math.PI/2+2*Math.PI*i/7;pos[inv_idx[i]]=[W/2+R1*Math.cos(a),H/2+R1*Math.sin(a)]}
+var heavy=[[0,2,2],[2,0,0],[2,2,2]];
+var R2=320;
+var gcount=0;
+for(var h=0;h<3;h++){
+  var hi=idx(heavy[h]);
+  var gens=[];
+  for(var i=0;i<32;i++){var d=dbl(BL[i]);if(ord(BL[i])==4&&d[0]==heavy[h][0]&&d[1]==heavy[h][1]&&d[2]==heavy[h][2])gens.push(i)}
+  var cx=W/2+R2*Math.cos(-Math.PI/2+2*Math.PI*h/3);
+  var cy=H/2+R2*Math.sin(-Math.PI/2+2*Math.PI*h/3);
+  for(var g=0;g<gens.length;g++){
+    var a=2*Math.PI*g/gens.length;
+    pos[gens[g]]=[cx+70*Math.cos(a),cy+70*Math.sin(a)];
+  }
+}
+for(var i=0;i<32;i++){
+  if(ord(BL[i])!=4)continue;
+  var d=dbl(BL[i]);var di=idx(d);
+  if(di<0||!pos[i]||!pos[di])continue;
+  ctx.strokeStyle="rgba(100,100,255,0.3)";ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pos[i][0],pos[i][1]);ctx.lineTo(pos[di][0],pos[di][1]);ctx.stroke();
+}
+var fano=[[0,1,3],[0,4,5],[0,6,2],[1,4,6],[1,5,2],[3,4,2],[3,5,6]];
+for(var f=0;f<7;f++){
+  var a=inv_idx[fano[f][0]],b=inv_idx[fano[f][1]],c=inv_idx[fano[f][2]];
+  if(!pos[a]||!pos[b]||!pos[c])continue;
+  ctx.strokeStyle="rgba(255,200,50,0.2)";ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pos[a][0],pos[a][1]);ctx.lineTo(pos[b][0],pos[b][1]);ctx.lineTo(pos[c][0],pos[c][1]);ctx.closePath();ctx.stroke();
+}
+for(var i=0;i<32;i++){
+  if(!pos[i])continue;
+  var o=ord(BL[i]);
+  var r=o==1?12:(o==2?10:6);
+  var col=o==1?"#ffffff":(o==2?(function(){var d=dbl(BL[i]);var hasZ4=false;for(var j=0;j<32;j++)if(ord(BL[j])==4){var dd=dbl(BL[j]);if(dd[0]==BL[i][0]&&dd[1]==BL[i][1]&&dd[2]==BL[i][2])hasZ4=true}return hasZ4?"#ff4444":"#44ff44"})():"#4488ff");
+  ctx.beginPath();ctx.arc(pos[i][0],pos[i][1],r,0,2*Math.PI);ctx.fillStyle=col;ctx.fill();
+  ctx.strokeStyle="#fff";ctx.lineWidth=0.5;ctx.stroke();
+  ctx.fillStyle="#fff";ctx.font="9px Segoe UI";ctx.textAlign="center";
+  ctx.fillText(BL[i][0]+","+BL[i][1]+","+BL[i][2],pos[i][0],pos[i][1]+r+10);
+}
+ctx.fillStyle="#6cb4ee";ctx.font="14px Segoe UI";ctx.textAlign="center";
+ctx.fillText("T = Z4 x (Z4 x_Z2 Z4) | 32 elements | Exponent 4 | 51 subgroups",W/2,H-20);
+ctx.fillText("White=identity | Green=light involution | Red=heavy involution | Blue=generator",W/2,H-5);
+for(var h=0;h<3;h++){
+  var cx=W/2+R2*Math.cos(-Math.PI/2+2*Math.PI*h/3);
+  var cy=H/2+R2*Math.sin(-Math.PI/2+2*Math.PI*h/3);
+  ctx.fillStyle="#ff6666";ctx.font="11px Segoe UI";
+  ctx.fillText("("+heavy[h]+")",cx,cy-85);
+}
+</script></body></html>

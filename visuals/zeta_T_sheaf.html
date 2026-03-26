@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>T-Sheaf Zeta</title>
+<style>*{margin:0;padding:0}body{background:#0a0a1a;overflow:hidden}canvas{display:block}
+#info{position:fixed;top:10px;left:10px;font-size:11px;color:#e0e0e0;background:rgba(0,0,0,0.7);padding:10px;border-radius:5px;font-family:Segoe UI;max-width:300px;line-height:1.5}
+#info h3{color:#6cb4ee}</style></head><body>
+<canvas id="cv"></canvas>
+<div id="info"><h3>Z_T = Z_const^29 x Z_twist^3</h3>
+Blue: Z_const (standard)<br>Red: Z_twist (antiparticle)<br>Green: L = (Z_twist/Z_const)^3<br>Yellow: log|Z_T|<br><br>
+Drag: pan | Scroll: zoom<br>Poles at T=1/q^j (blue) and T=-1/q^j (red)</div>
+<script>
+var cv=document.getElementById("cv"),ctx=cv.getContext("2d"),W,H;
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}resize();onresize=resize;
+var ox=0,oy=0,sc=800,drag=false,mx,my;
+cv.onmousedown=function(e){drag=true;mx=e.clientX;my=e.clientY};
+cv.onmouseup=function(){drag=false};
+cv.onmousemove=function(e){if(drag){ox+=(e.clientX-mx);oy+=(e.clientY-my);mx=e.clientX;my=e.clientY}};
+cv.onwheel=function(e){sc*=e.deltaY>0?0.9:1.1;e.preventDefault()};
+function sx(t){return W/2+ox+t*sc}
+function sy(v){return H/2+oy-v*sc*0.3}
+function zc(t){var d=(1-t)*(1-2*t)*Math.pow(1-4*t,2)*(1-8*t)*(1-16*t);return Math.abs(d)>1e-10?1/d:1e10}
+function zt(t){var d=(1+t)*(1+2*t)*Math.pow(1+4*t,2)*(1+8*t)*(1+16*t);return Math.abs(d)>1e-10?1/d:1e10}
+function Lf(t){var r=1;var aa=[1,2,4,4,8,16];for(var i=0;i<6;i++){var d=1+aa[i]*t;if(Math.abs(d)<1e-10)return 1e10;r*=(1-aa[i]*t)/d}return Math.pow(r,3)}
+function draw(){
+ctx.clearRect(0,0,W,H);
+ctx.strokeStyle="rgba(255,255,255,0.15)";ctx.lineWidth=1;
+ctx.beginPath();ctx.moveTo(0,sy(0));ctx.lineTo(W,sy(0));ctx.stroke();
+ctx.beginPath();ctx.moveTo(sx(0),0);ctx.lineTo(sx(0),H);ctx.stroke();
+ctx.strokeStyle="rgba(255,255,255,0.05)";ctx.lineWidth=0.5;
+for(var g=-5;g<=5;g++){ctx.beginPath();ctx.moveTo(sx(g*0.1),0);ctx.lineTo(sx(g*0.1),H);ctx.stroke()}
+var poles=[1,0.5,0.25,0.125,0.0625];
+ctx.strokeStyle="rgba(68,136,255,0.4)";ctx.setLineDash([3,3]);
+for(var i=0;i<5;i++){ctx.beginPath();ctx.moveTo(sx(poles[i]),0);ctx.lineTo(sx(poles[i]),H);ctx.stroke()}
+ctx.strokeStyle="rgba(255,68,68,0.4)";
+for(var i=0;i<5;i++){ctx.beginPath();ctx.moveTo(sx(-poles[i]),0);ctx.lineTo(sx(-poles[i]),H);ctx.stroke()}
+ctx.setLineDash([]);
+ctx.strokeStyle="#4488ff";ctx.lineWidth=2;ctx.beginPath();
+for(var px=0;px<W;px++){var t=(px-W/2-ox)/sc;var v=zc(t);var lv=v==0?0:(v>0?1:-1)*Math.log10(1+Math.abs(v));var y=sy(lv*0.15);if(y<-500)y=-500;if(y>H+500)y=H+500;if(px==0)ctx.moveTo(px,y);else ctx.lineTo(px,y)}ctx.stroke();
+ctx.strokeStyle="#ff4444";ctx.lineWidth=2;ctx.beginPath();
+for(var px=0;px<W;px++){var t=(px-W/2-ox)/sc;var v=zt(t);var lv=v==0?0:(v>0?1:-1)*Math.log10(1+Math.abs(v));var y=sy(lv*0.15);if(y<-500)y=-500;if(y>H+500)y=H+500;if(px==0)ctx.moveTo(px,y);else ctx.lineTo(px,y)}ctx.stroke();
+ctx.strokeStyle="#44ff44";ctx.lineWidth=2.5;ctx.beginPath();
+for(var px=0;px<W;px++){var t=(px-W/2-ox)/sc;var v=Lf(t);var lv=v==0?0:(v>0?1:-1)*Math.log10(1+Math.abs(v));var y=sy(lv*0.15);if(y<-500)y=-500;if(y>H+500)y=H+500;if(px==0)ctx.moveTo(px,y);else ctx.lineTo(px,y)}ctx.stroke();
+ctx.fillStyle="#6cb4ee";ctx.font="14px Segoe UI";ctx.textAlign="center";
+ctx.fillText("Z_T = Z_const^29 x Z_twist^3  |  L = (Z_twist/Z_const)^3  |  29 particle + 3 antiparticle = 32 = |T|",W/2,H-15);
+ctx.font="10px Segoe UI";ctx.fillStyle="#4488ff";
+for(var i=0;i<5;i++){ctx.fillText("1/"+Math.round(1/poles[i]),sx(poles[i]),sy(0)+15)}
+ctx.fillStyle="#ff4444";
+for(var i=0;i<5;i++){ctx.fillText("-1/"+Math.round(1/poles[i]),sx(-poles[i]),sy(0)+15)}
+requestAnimationFrame(draw)}draw();
+</script></body></html>

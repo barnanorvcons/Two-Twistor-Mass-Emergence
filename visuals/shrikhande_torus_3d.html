@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Shrikhande Torus 3D</title>
+<style>*{margin:0;padding:0}body{background:#0a0a1a;overflow:hidden}canvas{display:block}
+#info{position:fixed;top:10px;left:10px;font-size:11px;color:#e0e0e0;background:rgba(0,0,0,0.7);padding:10px;border-radius:5px;font-family:Segoe UI;max-width:260px;line-height:1.5}
+#info h3{color:#6cb4ee}#ct{position:fixed;bottom:10px;left:10px;color:#888;font:11px Segoe UI;background:rgba(0,0,0,0.7);padding:8px;border-radius:5px}
+</style></head><body>
+<canvas id="cv"></canvas>
+<div id="info"><h3>Shrikhande on Torus</h3>srg(16,6,2,2) = Graviton Wall<br>Complement = VO+(4,2)<br>Eigs: 6(x1), 2(x6), -2(x9)<br>8 cliques=8 gravitons<br>24 matchings=S4<br>32 triangles, chi=4<br>Blue=even/visible Red=odd/dark<br>Green=bond points</div>
+<div id="ct">Drag rotate | Scroll zoom</div>
+<script>
+var cv=document.getElementById("cv"),ctx=cv.getContext("2d"),W,H;
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}resize();onresize=resize;
+var eo=[[0,1],[0,3],[0,5],[0,7],[1,2],[1,4],[1,6],[2,3],[2,5],[2,7],[3,4],[3,6],[4,5],[4,7],[5,6],[6,7]];
+function adjQ(a,b){var s=0;if(a[0]==b[0]||a[0]==b[1])s++;if(a[1]==b[0]||a[1]==b[1])s++;return s==1}
+var AA=[];for(var i=0;i<16;i++){AA[i]=[];for(var j=0;j<16;j++)AA[i][j]=adjQ(eo[i],eo[j])?1:0}
+function grav(p){var g=[];for(var e=0;e<8;e++)if(p[0]==e||p[1]==e)g.push(e);return g}
+var gp=[];for(var i=0;i<16;i++){var e=eo[i][0],o=eo[i][1];var ev=e%2==0?e:o,od=e%2==1?e:o;gp.push([ev/2,(od-1)/2])}
+var R0=130,r0=50,rX=-0.3,rY=0,zm=1.8,drg=false,mx,my;
+cv.onmousedown=function(e){drg=true;mx=e.clientX;my=e.clientY};
+cv.onmouseup=function(){drg=false};
+cv.onmousemove=function(e){if(drg){rY+=(e.clientX-mx)*0.01;rX+=(e.clientY-my)*0.01;mx=e.clientX;my=e.clientY}};
+cv.onwheel=function(e){zm*=e.deltaY>0?0.95:1.05;e.preventDefault()};
+var PI=Math.PI;
+function tp(u,v){var x=(R0+r0*Math.cos(v))*Math.cos(u),y=(R0+r0*Math.cos(v))*Math.sin(u),z=r0*Math.sin(v);return[x,y,z]}
+function rxf(p,a){var c=Math.cos(a),s=Math.sin(a);return[p[0],p[1]*c-p[2]*s,p[1]*s+p[2]*c]}
+function ryf(p,a){var c=Math.cos(a),s=Math.sin(a);return[p[0]*c+p[2]*s,p[1],-p[0]*s+p[2]*c]}
+function proj(p){var s=zm*300/(p[2]+500);return[W/2+p[0]*s,H/2+p[1]*s,p[2],s]}
+function draw(){
+ctx.clearRect(0,0,W,H);var t=Date.now()*0.0003;
+if(!drg)rY=t;
+var p3=[],p2=[];
+for(var i=0;i<16;i++){var row=gp[i][0],col=gp[i][1];var u=2*PI*((row+col*0.25)%4)/4,v=2*PI*col/4;var p=tp(u,v);p=rxf(p,rX);p=ryf(p,rY);p3.push(p);p2.push(proj(p))}
+ctx.strokeStyle="rgba(100,180,255,0.12)";ctx.lineWidth=0.8;
+for(var i=0;i<24;i++){var u0=2*PI*i/24;ctx.beginPath();for(var j=0;j<=24;j++){var v0=2*PI*j/24;var p=tp(u0,v0);p=rxf(p,rX);p=ryf(p,rY);var pp=proj(p);if(j==0)ctx.moveTo(pp[0],pp[1]);else ctx.lineTo(pp[0],pp[1])}ctx.stroke()}
+for(var j=0;j<12;j++){var v0=2*PI*j/12;ctx.beginPath();for(var i=0;i<=24;i++){var u0=2*PI*i/24;var p=tp(u0,v0);p=rxf(p,rX);p=ryf(p,rY);var pp=proj(p);if(i==0)ctx.moveTo(pp[0],pp[1]);else ctx.lineTo(pp[0],pp[1])}ctx.stroke()}
+var edges=[];
+for(var i=0;i<16;i++)for(var j=i+1;j<16;j++){if(!AA[i][j])continue;var z=(p3[i][2]+p3[j][2])/2;var gi=grav(eo[i]),gj=grav(eo[j]),sh=-1;for(var a=0;a<2;a++)for(var b=0;b<2;b++)if(gi[a]==gj[b])sh=gi[a];var c=sh>=0?(sh%2==0?"rgba(68,136,255,0.5)":"rgba(255,68,68,0.5)"):"rgba(200,200,200,0.12)";edges.push([i,j,z,c])}
+edges.sort(function(a,b){return a[2]-b[2]});
+for(var e of edges){ctx.strokeStyle=e[3];ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(p2[e[0]][0],p2[e[0]][1]);ctx.lineTo(p2[e[1]][0],p2[e[1]][1]);ctx.stroke()}
+var vi=[];for(var i=0;i<16;i++)vi.push([i,p3[i][2]]);vi.sort(function(a,b){return a[1]-b[1]});
+for(var v of vi){var i=v[0],x=p2[i][0],y=p2[i][1],s=p2[i][3],sz=Math.max(4,7*s/zm);
+ctx.beginPath();ctx.arc(x,y,sz,0,2*PI);var gr=ctx.createRadialGradient(x,y,0,x,y,sz);gr.addColorStop(0,"#66ff66");gr.addColorStop(1,"#226622");ctx.fillStyle=gr;ctx.fill();ctx.strokeStyle="#fff";ctx.lineWidth=0.5;ctx.stroke();
+var gs=grav(eo[i]);ctx.beginPath();ctx.arc(x-sz*0.35,y-sz*0.4,sz*0.25,0,2*PI);ctx.fillStyle="#4488ff";ctx.fill();
+ctx.beginPath();ctx.arc(x+sz*0.35,y-sz*0.4,sz*0.25,0,2*PI);ctx.fillStyle="#ff4444";ctx.fill();
+if(sz>5){ctx.fillStyle="#fff";ctx.font=Math.max(7,sz*0.7)+"px Segoe UI";ctx.textAlign="center";ctx.fillText(eo[i][0]+","+eo[i][1],x,y+sz+10)}}
+ctx.fillStyle="#6cb4ee";ctx.font="16px Segoe UI";ctx.textAlign="center";ctx.fillText("Shrikhande Graph on Torus = Graviton Wall",W/2,H-35);
+ctx.fillStyle="#666";ctx.font="11px Segoe UI";ctx.fillText("srg(16,6,2,2) | Complement=VO+(4,2) | 8 gravitons | Eigs: 6(x1) 2(x6) -2(x9)",W/2,H-18);
+requestAnimationFrame(draw)}draw();
+</script></body></html>

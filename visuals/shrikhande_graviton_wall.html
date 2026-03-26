@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<title>Shrikhande - Graviton Wall</title>
+<style>
+body{background:#0a0a1a;color:#e0e0e0;font-family:Segoe UI,sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;padding:20px}
+h1{color:#6cb4ee;font-size:22px}
+.sub{color:#888;font-style:italic;font-size:13px}
+canvas{border:1px solid #222;border-radius:8px;background:#0d0d20;margin:10px}
+.info{background:#111;border-left:3px solid #6cb4ee;padding:10px;margin:10px;font-size:12px;max-width:800px;line-height:1.6}
+</style></head><body>
+<h1>The Graviton Wall: Shrikhande Graph srg(16,6,2,2)</h1>
+<p class="sub">T(8) core: 8 gravitons, 16 bonds, visible-dark interface</p>
+<canvas id="c1" width="800" height="800"></canvas>
+<div class="info">
+<b>8 gravitons:</b> 4 even/blue (visible) + 4 odd/red (dark). Each = max clique of 4.<br>
+<b>16 bonds:</b> every one crosses even-odd. No same-parity bonds.<br>
+<b>Connection J4:</b> every visible graviton sees every dark graviton equally.<br>
+<b>Eigenvalues:</b> 6(x1), 2(x6), -2(x9). Multiplicities 1,6,9.<br>
+<b>Transfer:</b> exactly 4 paths from any visible to any dark vertex.
+</div>
+<script>
+var PI=Math.PI,eo=[[0,1],[0,3],[0,5],[0,7],[1,2],[1,4],[1,6],[2,3],[2,5],[2,7],[3,4],[3,6],[4,5],[4,7],[5,6],[6,7]];
+function adj(a,b){var s=0;if(a[0]==b[0]||a[0]==b[1])s++;if(a[1]==b[0]||a[1]==b[1])s++;return s==1}
+var cv=document.getElementById("c1"),ctx=cv.getContext("2d"),W=800,H=800,cx=W/2,cy=H/2,R=300;
+var pos=[];for(var i=0;i<16;i++){var a=-PI/2+2*PI*i/16;pos.push([cx+R*Math.cos(a),cy+R*Math.sin(a)])}
+for(var i=0;i<16;i++)for(var j=i+1;j<16;j++){if(!adj(eo[i],eo[j]))continue;var sh=-1;for(var a=0;a<2;a++)for(var b=0;b<2;b++)if(eo[i][a]==eo[j][b])sh=eo[i][a];ctx.strokeStyle=sh%2==0?"rgba(68,136,255,0.3)":"rgba(255,68,68,0.3)";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pos[i][0],pos[i][1]);ctx.lineTo(pos[j][0],pos[j][1]);ctx.stroke()}
+for(var i=0;i<16;i++){ctx.beginPath();ctx.arc(pos[i][0],pos[i][1],14,0,2*PI);var g0=eo[i][0],g1=eo[i][1];ctx.fillStyle="#44ff44";ctx.fill();ctx.strokeStyle="#fff";ctx.lineWidth=1;ctx.stroke();ctx.fillStyle="#000";ctx.font="9px Segoe UI";ctx.textAlign="center";ctx.fillText(g0+","+g1,pos[i][0],pos[i][1]+3);var an=-PI/2+2*PI*i/16,lx=cx+(R+28)*Math.cos(an),ly=cy+(R+28)*Math.sin(an);ctx.fillStyle="#888";ctx.font="10px Segoe UI";ctx.fillText("g"+g0+"-g"+g1,lx,ly+4)}
+ctx.fillStyle="#6cb4ee";ctx.font="15px Segoe UI";ctx.textAlign="center";ctx.fillText("Shrikhande srg(16,6,2,2)",cx,cy-15);ctx.fillStyle="#f0a030";ctx.font="12px Segoe UI";ctx.fillText("4 even gravitons (blue) + 4 odd (red)",cx,cy+5);ctx.fillText("16 bonds: all cross even-odd boundary",cx,cy+20);ctx.fillText("Eigenvalues: 6(x1), 2(x6), -2(x9)",cx,cy+35);
+ctx.fillStyle="#4488ff";ctx.font="13px Segoe UI";ctx.textAlign="left";ctx.fillText("VISIBLE: g0,g2,g4,g6",15,25);ctx.fillStyle="#ff4444";ctx.textAlign="right";ctx.fillText("DARK: g1,g3,g5,g7",W-15,25);
+</script></body></html>

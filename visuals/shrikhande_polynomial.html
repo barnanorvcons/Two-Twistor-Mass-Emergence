@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Shrikhande Characteristic Polynomial</title>
+<style>*{margin:0;padding:0}body{background:#0a0a1a;overflow:hidden}canvas{display:block}
+#info{position:fixed;top:10px;left:10px;font-size:11px;color:#e0e0e0;background:rgba(0,0,0,0.7);padding:10px;border-radius:5px;font-family:Segoe UI;max-width:300px;line-height:1.5}
+#info h3{color:#6cb4ee}
+#ct{position:fixed;bottom:10px;left:10px;color:#888;font:11px Segoe UI;background:rgba(0,0,0,0.7);padding:8px;border-radius:5px}
+</style></head><body>
+<canvas id="cv"></canvas>
+<div id="info"><h3>Characteristic Polynomial</h3>p(x) = (x-6)(x-2)<sup>6</sup>(x+2)<sup>9</sup><br>Roots: -2 (mult 9), 2 (mult 6), 6 (mult 1)<br>det(A) = -3 x 2<sup>16</sup><br>Ihara poles at |u| = 1/sqrt(5) = cos(63.43)<br><br>Drag: pan | Scroll: zoom<br>Green dots: roots<br>Yellow: framework primes<br>Red line: zero axis</div>
+<div id="ct">p(0)=-196608=-3x2^16 | p(-1)=-7x3^6 | p(3)=-3x5^9 | Spanning trees=2^35</div>
+<script>
+var cv=document.getElementById("cv"),ctx=cv.getContext("2d"),W,H;
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight}resize();onresize=resize;
+var cx=0,cy=0,sc=50,drag=false,mx,my;
+cv.onmousedown=function(e){drag=true;mx=e.clientX;my=e.clientY};
+cv.onmouseup=function(){drag=false};
+cv.onmousemove=function(e){if(drag){cx+=(e.clientX-mx);cy+=(e.clientY-my);mx=e.clientX;my=e.clientY}};
+cv.onwheel=function(e){var f=e.deltaY>0?0.9:1.1;sc*=f;e.preventDefault()};
+function p(x){return(x-6)*Math.pow(x-2,6)*Math.pow(x+2,9)}
+function toScreen(x,y){return[W/2+cx+x*sc,H/2+cy-y*sc]}
+function draw(){
+ctx.clearRect(0,0,W,H);
+var xMin=(-(W/2+cx))/sc,xMax=((W/2-cx))/sc;
+var yMin=(-(H/2-cy))/sc,yMax=((H/2+cy))/sc;
+ctx.strokeStyle="rgba(255,255,255,0.08)";ctx.lineWidth=0.5;
+var gx=Math.pow(10,Math.floor(Math.log10(W/sc/4)));
+for(var x=Math.floor(xMin/gx)*gx;x<=xMax;x+=gx){var s=toScreen(x,0);ctx.beginPath();ctx.moveTo(s[0],0);ctx.lineTo(s[0],H);ctx.stroke()}
+var gy=Math.pow(10,Math.floor(Math.log10(H/sc/4)));
+for(var y=Math.floor(yMin/gy)*gy;y<=yMax;y+=gy){var s=toScreen(0,y);ctx.beginPath();ctx.moveTo(0,s[1]);ctx.lineTo(W,s[1]);ctx.stroke()}
+ctx.strokeStyle="rgba(255,50,50,0.4)";ctx.lineWidth=1;
+var z=toScreen(0,0);ctx.beginPath();ctx.moveTo(0,z[1]);ctx.lineTo(W,z[1]);ctx.stroke();
+ctx.strokeStyle="rgba(255,255,255,0.2)";ctx.beginPath();ctx.moveTo(z[0],0);ctx.lineTo(z[0],H);ctx.stroke();
+ctx.strokeStyle="#6cb4ee";ctx.lineWidth=2;ctx.beginPath();
+var first=true;
+for(var px=0;px<W;px++){
+  var x=(px-W/2-cx)/sc;
+  var y=p(x);
+  var yLog=y==0?0:(y>0?1:-1)*Math.log10(1+Math.abs(y));
+  var sy=H/2+cy-yLog*sc;
+  if(sy<-1000)sy=-1000;if(sy>H+1000)sy=H+1000;
+  if(first){ctx.moveTo(px,sy);first=false}else ctx.lineTo(px,sy);
+}
+ctx.stroke();
+var roots=[-2,2,6];var mults=[9,6,1];
+for(var i=0;i<3;i++){
+  var s=toScreen(roots[i],0);
+  ctx.beginPath();ctx.arc(s[0],s[1],8,0,2*Math.PI);ctx.fillStyle="#44ff44";ctx.fill();
+  ctx.fillStyle="#fff";ctx.font="12px Segoe UI";ctx.textAlign="center";
+  ctx.fillText("x="+roots[i]+" (m="+mults[i]+")",s[0],s[1]-12);
+}
+var primes=[3,5,7,13];
+for(var i=0;i<primes.length;i++){
+  var x=primes[i],y=p(x);
+  var yLog=y==0?0:(y>0?1:-1)*Math.log10(1+Math.abs(y));
+  var s=toScreen(x,yLog);
+  ctx.beginPath();ctx.arc(s[0],s[1],5,0,2*Math.PI);ctx.fillStyle="#f0a030";ctx.fill();
+  ctx.fillStyle="#f0a030";ctx.font="10px Segoe UI";ctx.textAlign="center";
+  ctx.fillText("p("+x+")",s[0],s[1]-8);
+}
+ctx.fillStyle="#6cb4ee";ctx.font="14px Segoe UI";ctx.textAlign="center";
+ctx.fillText("p(x) = (x-6)(x-2)^6(x+2)^9  [log scale y-axis]",W/2,H-30);
+ctx.fillStyle="#888";ctx.font="11px Segoe UI";
+ctx.fillText("Roots at x = -2 (mult 9, dark), x = 2 (mult 6, visible), x = 6 (mult 1, total)",W/2,H-12);
+ctx.fillStyle="#555";ctx.font="10px Segoe UI";ctx.textAlign="left";
+ctx.fillText("scale: "+sc.toFixed(1),10,H-10);
+requestAnimationFrame(draw)}
+draw();
+</script></body></html>
